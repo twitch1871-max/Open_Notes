@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {filterNotes,wordCount,decodeNotes} from '../src/model.js';
+test('search matches body and title, ignores case and sorts newest first',()=>{const notes=[{title:'Idee',body:'Plan',updated:1},{title:'Neu',body:'Eine IDEE',updated:2}];assert.deepEqual(filterNotes(notes,' idee ').map(n=>n.updated),[2,1]);assert.equal(filterNotes(notes,'fehlt').length,0);});
+test('word count handles blank text and newlines',()=>{assert.equal(wordCount('  '),0);assert.equal(wordCount('Eine\nneue Idee'),3);});
+test('storage rejects malformed data rather than replacing notes',()=>{assert.throws(()=>decodeNotes('{}'));assert.throws(()=>decodeNotes('[{"id":"1"}]'));const notes=[{id:'1',title:'Hallo',body:'Welt',updated:1}];assert.deepEqual(decodeNotes(JSON.stringify(notes)),notes);});
